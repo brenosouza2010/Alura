@@ -1,2 +1,2 @@
 # Alura
-Site feito com as aulas do alura
+Site feito com as aulas do Alura
