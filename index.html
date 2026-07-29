@@ -1,1 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Silksong — Alma de Aço: Guia (Ato 1, 2, 3)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Guia passo a passo para zerar Alma de Aço em Silksong (Ato 1, 2 e 3). Projeto didático: HTML semântico, CSS (Flexbox), JS (DOM), acessibilidade e UX." />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Ir para o conteúdo principal</a>
 
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <h1>Silksong — Alma de Aço</h1>
+      <p class="tagline">Guia por atos — Ato 1, Ato 2, Ato 3. Foco em práticas acessíveis e interativas.</p>
+      <div class="header-controls">
+        <button id="theme-toggle" aria-pressed="false" aria-label="Alternar tema">Alternar tema</button>
+        <button id="show-stats" aria-haspopup="dialog" aria-label="Mostrar estatísticas">Estatísticas</button>
+      </div>
+    </div>
+    <nav class="primary-nav" role="navigation" aria-label="Navegação dos atos">
+      <div class="container nav-inner" role="menubar">
+        <button class="nav-btn" data-act="1" role="menuitem" aria-pressed="false">Ato 1</button>
+        <button class="nav-btn" data-act="2" role="menuitem" aria-pressed="false">Ato 2</button>
+        <button class="nav-btn" data-act="3" role="menuitem" aria-pressed="false">Ato 3</button>
+        <a class="nav-link" href="#references">Referências</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" class="container main" role="main">
+    <aside class="sidebar" aria-label="Painel lateral">
+      <section class="progress" aria-live="polite" aria-atomic="true">
+        <h2>Progresso</h2>
+        <ul id="progress-list">
+          <li>Ato 1: <span id="status-1">Pendente</span></li>
+          <li>Ato 2: <span id="status-2">Pendente</span></li>
+          <li>Ato 3: <span id="status-3">Pendente</span></li>
+        </ul>
+        <div class="counter">
+          <h3>Interações</h3>
+          <p>Cliques em dicas: <strong id="click-count">0</strong></p>
+        </div>
+        <button id="reset-progress" aria-label="Resetar progresso">Resetar progresso</button>
+      </section>
+    </aside>
+
+    <section class="content" id="content" aria-live="polite">
+      <!-- ATO 1 -->
+      <article id="act-1" class="act" data-act="1" hidden>
+        <header>
+          <h2>Ato 1 — Preparação e Primeiro Confronto</h2>
+          <p class="lead">Objetivos principais, equipamentos recomendados e passo a passo inicial.</p>
+        </header>
+        <section>
+          <h3>Resumo</h3>
+          <p>Descrição sucinta do objetivo do ato e das mecânicas importantes.</p>
+        </section>
+
+        <section class="tips">
+          <h3>Dicas essenciais</h3>
+          <ul>
+            <li>Mapa: explore corredores laterais para itens de resistência.</li>
+            <li>Parry: aprenda o timing do inimigo X.</li>
+            <li>Build sugerida: agilidade + armadura leve.</li>
+          </ul>
+          <button class="tip-btn" data-tip="1">Mostrar dica > (conta interação)</button>
+        </section>
+
+        <section class="tasks">
+          <h3>Tarefas do Ato 1</h3>
+          <ol>
+            <li>Encontrar a chave do portão</li>
+            <li>Derrotar o guarda mecânico</li>
+            <li>Ativar o mecanismo</li>
+          </ol>
+          <button class="complete-btn" data-act="1" aria-pressed="false">Marcar Ato 1 como concluído</button>
+        </section>
+      </article>
+
+      <!-- ATO 2 -->
+      <article id="act-2" class="act" data-act="2" hidden>
+        <header>
+          <h2>Ato 2 — Labirinto e Mestre de Testes</h2>
+          <p class="lead">Desafios, puzzles e padrões de ataque do chefe.</p>
+        </header>
+
+        <section class="tips">
+          <h3>Dicas essenciais</h3>
+          <ul>
+            <li>Observe padrões de luz para resolver puzzles.</li>
+            <li>Use área para agrupar inimigos.</li>
+            <li>Economize recursos para o chefe intermediário.</li>
+          </ul>
+          <button class="tip-btn" data-tip="2">Mostrar dica > (conta interação)</button>
+        </section>
+
+        <section class="tasks">
+          <h3>Tarefas do Ato 2</h3>
+          <ol>
+            <li>Atingir o farol norte</li>
+            <li>Resolver o puzzle circular</li>
+            <li>Derrotar o Guardião da Forja</li>
+          </ol>
+          <button class="complete-btn" data-act="2" aria-pressed="false">Marcar Ato 2 como concluído</button>
+        </section>
+      </article>
+
+      <!-- ATO 3 -->
+      <article id="act-3" class="act" data-act="3" hidden>
+        <header>
+          <h2>Ato 3 — Confronto Final: Alma de Aço</h2>
+          <p class="lead">Estratégias para a batalha final, mecânicas e posicionamento.</p>
+        </header>
+
+        <section class="tips">
+          <h3>Dicas essenciais</h3>
+          <ul>
+            <li>Fase de escudo: foque em movimentos laterais e contra-ataque.</li>
+            <li>Fase de esquiva segura: fique perto das plataformas centrais.</li>
+            <li>Use buffs temporários antes da última barra de vida.</li>
+          </ul>
+          <button class="tip-btn" data-tip="3">Mostrar dica > (conta interação)</button>
+        </section>
+
+        <section class="tasks">
+          <h3>Tarefas do Ato 3</h3>
+          <ol>
+            <li>Quebrar o escudo 3 vezes</li>
+            <li>Sobreviver à chuva de aço</li>
+            <li>Finalizar com ataque carregado</li>
+          </ol>
+          <button class="complete-btn" data-act="3" aria-pressed="false">Marcar Ato 3 como concluído</button>
+        </section>
+      </article>
+
+      <div id="completion-banner" role="status" aria-live="assertive" class="completion" hidden>
+        <p>Parabéns! Todos os atos foram concluídos — Alma de Aço zerada!</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo" id="references">
+    <div class="container">
+      <p>Autores: <strong>Breno Souza</strong> (exemplo). Projeto didático — Start by Alura.</p>
+      <p>Ética e acessibilidade: este conteúdo prioriza clareza, não incentiva trapaça e recomenda respeito à comunidade de jogadores.</p>
+      <h4>Referências</h4>
+      <ul>
+        <li><a href="https://www.hellpointgame.com/" target="_blank" rel="noopener noreferrer">Referência de design (exemplos)</a></li>
+        <li><a href="https://www.w3.org/WAI/" target="_blank" rel="noopener noreferrer">WAI — Acessibilidade Web</a></li>
+      </ul>
+      <p>Licença: CC BY-SA. Para colaborar: edite o arquivo README.md e proponha contribuições via Git.</p>
+    </div>
+  </footer>
+
+  <!-- Modal de estatísticas simples -->
+  <dialog id="stats-modal" aria-labelledby="stats-title">
+    <h3 id="stats-title">Estatísticas</h3>
+    <div id="stats-content"></div>
+    <menu>
+      <button id="close-stats">Fechar</button>
+    </menu>
+  </dialog>
+</body>
+</html>
