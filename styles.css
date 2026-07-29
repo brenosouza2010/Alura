@@ -1,1 +1,81 @@
+:root{
+  --bg:#fff;
+  --text:#111;
+  --muted:#555;
+  --accent:#7c3aed; /* roxo */
+  --card:#f7f7fb;
+  --focus: #ffb020;
+  --max-width:1100px;
+  --gap:1rem;
+  --radius:8px;
+}
 
+[data-theme="dark"]{
+  --bg:#0b1020;
+  --text:#e6eef8;
+  --muted:#9fb0d0;
+  --accent:#8b5cf6;
+  --card:#101622;
+  --focus:#ffd480;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+.container{max-width:var(--max-width);margin:0 auto;padding:1rem;}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--gap)}
+.tagline{margin:0;color:var(--muted)}
+.header-controls{display:flex;gap:0.5rem;align-items:center}
+.primary-nav{background:var(--card);border-top:1px solid rgba(0,0,0,0.05);border-bottom:1px solid rgba(0,0,0,0.05)}
+.nav-inner{display:flex;gap:0.5rem;align-items:center;padding:0.5rem}
+.nav-btn,.nav-link{background:transparent;border:0;padding:0.5rem 0.75rem;border-radius:6px;cursor:pointer;color:var(--text);text-decoration:none}
+.nav-btn[aria-pressed="true"],.nav-btn:focus{outline:2px solid var(--accent);background:linear-gradient(90deg,rgba(124,58,237,0.08),transparent)}
+
+.skip-link{
+  position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden;
+}
+.skip-link:focus{position:static;left:auto;top:0;z-index:1000;background:var(--accent);color:white;padding:0.5rem 1rem;border-radius:4px}
+
+.main{display:flex;gap:var(--gap);align-items:flex-start;padding:1rem 0}
+.sidebar{flex:0 0 260px;background:var(--card);padding:1rem;border-radius:var(--radius)}
+.content{flex:1;background:transparent;padding:0 1rem}
+
+.act{background:linear-gradient(180deg,transparent,rgba(0,0,0,0.02));padding:1rem;border-radius:8px;margin-bottom:1rem}
+.lead{color:var(--muted)}
+
+.tips, .tasks{margin-top:1rem;padding:0.75rem;background:rgba(0,0,0,0.02);border-radius:6px}
+.tip-btn, .complete-btn, #reset-progress, #theme-toggle, #show-stats{cursor:pointer;padding:0.5rem 0.75rem;border-radius:6px;border:1px solid transparent;background:var(--accent);color:white}
+.tip-btn:hover, .complete-btn:hover,#theme-toggle:hover{opacity:0.95}
+
+.counter p{margin:0.5rem 0}
+
+.completion{margin-top:1rem;padding:1rem;border-radius:8px;background:linear-gradient(90deg,var(--accent),transparent);color:white}
+
+.site-footer{margin-top:2rem;padding:1rem;background:var(--card);border-radius:8px}
+.site-footer a{color:var(--accent)}
+
+button:focus{outline:3px solid var(--focus);outline-offset:2px}
+
+/* Responsive layout */
+@media (max-width:900px){
+  .main{flex-direction:column}
+  .sidebar{order:2;flex:1 0 auto}
+  .content{order:1}
+  .header-inner{flex-direction:column;align-items:flex-start;gap:0.5rem}
+}
+
+/* small tweaks for readability */
+ol,ul{padding-left:1.2rem}
+strong{color:var(--text)}
+
+/* Simple modal/dialog styles fallback */
+dialog{border:0;padding:1rem;border-radius:8px;background:var(--card);color:var(--text)}
+menu{display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1rem}
