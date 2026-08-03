@@ -1,156 +1,150 @@
-// script.js — interatividade e persistência (localStorage)
-// Boas práticas de acessibilidade: usar aria-pressed, aria-live e suportar teclado.
+// script.js - interatividade: contadores, tema, lógica condicional e persistência
+(function(){
+  "use strict";
 
-(() => {
-  const ACTS = [1,2,3];
-  const content = document.getElementById('content');
-  const navBtns = document.querySelectorAll('.nav-btn');
-  const tipBtns = document.querySelectorAll('.tip-btn');
-  const completeBtns = document.querySelectorAll('.complete-btn');
-  const statusEls = {
-    1: document.getElementById('status-1'),
-    2: document.getElementById('status-2'),
-    3: document.getElementById('status-3'),
-  };
-  const clickCountEl = document.getElementById('click-count');
-  const completionBanner = document.getElementById('completion-banner');
-  const resetBtn = document.getElementById('reset-progress');
+  const bosses = [
+    { id: 'spider', name: 'Aranha Sufocada' },
+    { id: 'coral', name: 'Coral Rainha' },
+    { id: 'blade', name: 'Mestre das Lâminas' }
+  ];
+
+  // Elementos
+  const bossListEl = document.querySelector('.boss-list');
+  const template = document.getElementById('boss-template');
+  const totalEl = document.getElementById('total');
+  const totalTargetEl = document.getElementById('total-target');
+  const resetBtn = document.getElementById('reset');
+  const markAllBtn = document.getElementById('mark-all');
+  const modal = document.getElementById('completion-modal');
+  const closeModalBtn = document.getElementById('close-modal');
   const themeToggle = document.getElementById('theme-toggle');
-  const statsModal = document.getElementById('stats-modal');
-  const showStats = document.getElementById('show-stats');
-  const closeStats = document.getElementById('close-stats');
-  const statsContent = document.getElementById('stats-content');
 
-  // State (persistido)
-  const storage = {
-    get(key, fallback){
-      try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch(e){return fallback}
-    },
-    set(key, value){
-      try{ localStorage.setItem(key, JSON.stringify(value)); }catch(e){}
+  const STORAGE_KEY = 'silksong-alma-state-v1';
+  let state = loadState();
+
+  // Inicializa UI
+  totalTargetEl.textContent = bosses.length;
+  renderBosses();
+  updateTotal();
+  restoreTheme();
+
+  // Renderiza itens a partir do template
+  function renderBosses(){
+    bossListEl.innerHTML = '';
+    bosses.forEach(b => {
+      const node = template.content.cloneNode(true);
+      const bossEl = node.querySelector('.boss');
+      const nameEl = node.querySelector('.boss-name');
+      const incBtn = node.querySelector('.inc');
+      const decBtn = node.querySelector('.dec');
+      const countEl = node.querySelector('.count');
+
+      bossEl.dataset.id = b.id;
+      nameEl.textContent = b.name;
+      const value = state[b.id] || 0;
+      countEl.textContent = value;
+
+      incBtn.addEventListener('click', () => { changeCount(b.id, +1, countEl); });
+      decBtn.addEventListener('click', () => { changeCount(b.id, -1, countEl); });
+
+      // Keyboard accessible: Enter increments
+      incBtn.addEventListener('keydown', e => { if(e.key === 'Enter') changeCount(b.id, +1, countEl); });
+      decBtn.addEventListener('keydown', e => { if(e.key === 'Enter') changeCount(b.id, -1, countEl); });
+
+      bossListEl.appendChild(node);
+    });
+  }
+
+  function changeCount(id, delta, countEl){
+    const current = state[id] || 0;
+    const next = Math.max(0, current + delta);
+    state[id] = next;
+    countEl.textContent = next;
+    saveState();
+    updateTotal();
+    checkCompletion();
+  }
+
+  function updateTotal(){
+    const total = bosses.reduce((acc,b) => acc + (state[b.id] || 0), 0);
+    totalEl.textContent = total;
+  }
+
+  function resetAll(){
+    bosses.forEach(b => state[b.id] = 0);
+    saveState();
+    renderBosses();
+    updateTotal();
+    closeModal();
+  }
+
+  function markAll(){
+    bosses.forEach(b => state[b.id] = 1);
+    saveState();
+    renderBosses();
+    updateTotal();
+    checkCompletion();
+  }
+
+  function checkCompletion(){
+    const allDone = bosses.every(b => (state[b.id] || 0) > 0);
+    if(allDone) openModal();
+  }
+
+  // Modal accessible
+  function openModal(){
+    modal.setAttribute('aria-hidden','false');
+    // move focus para o botão fechar
+    closeModalBtn.focus();
+  }
+  function closeModal(){
+    modal.setAttribute('aria-hidden','true');
+  }
+
+  // Event listeners
+  resetBtn.addEventListener('click', resetAll);
+  markAllBtn.addEventListener('click', markAll);
+  closeModalBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+      if(modal.getAttribute('aria-hidden') === 'false') closeModal();
     }
-  };
+  });
 
-  let interactionCount = storage.get('interactionCount', 0);
-  let completedActs = storage.get('completedActs', {1:false,2:false,3:false});
-  let theme = storage.get('theme', 'light');
+  // Persistence
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveState(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
 
-  // Inicialização do tema
-  document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
-  themeToggle.setAttribute('aria-pressed', theme === 'dark');
+  // Theme toggle with persistence
+  function restoreTheme(){
+    const saved = localStorage.getItem('silksong-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (prefersDark ? 'dark' : 'light');
+    setTheme(theme);
+  }
+
+  function setTheme(theme){
+    if(theme === 'dark'){
+      document.documentElement.setAttribute('data-theme','dark');
+      themeToggle.setAttribute('aria-pressed','true');
+    }else{
+      document.documentElement.removeAttribute('data-theme');
+      themeToggle.setAttribute('aria-pressed','false');
+    }
+    localStorage.setItem('silksong-theme', theme);
+  }
+
   themeToggle.addEventListener('click', () => {
-    theme = (theme === 'dark') ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
-    storage.set('theme', theme);
-    themeToggle.setAttribute('aria-pressed', theme === 'dark');
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    setTheme(isDark ? 'light' : 'dark');
   });
 
-  // Mostrar estatísticas (modal)
-  showStats.addEventListener('click', () => {
-    if (typeof statsModal.showModal === 'function') {
-      statsContent.innerHTML = `<p>Total de interações (dicas mostradas): <strong>${interactionCount}</strong></p>
-        <p>Atos concluídos: ${ACTS.filter(a => completedActs[a]).length} / ${ACTS.length}</p>`;
-      statsModal.showModal();
-    } else {
-      alert(`Interações: ${interactionCount}\nAtos concluídos: ${ACTS.filter(a=>completedActs[a]).length}`);
-    }
-  });
-  closeStats && closeStats.addEventListener('click', () => statsModal.close());
-
-  // Atualiza UI de progresso
-  function updateProgressUI(){
-    ACTS.forEach(a=>{
-      statusEls[a].textContent = completedActs[a] ? 'Concluído' : 'Pendente';
-      const btn = document.querySelector(`.complete-btn[data-act="${a}"]`);
-      if(btn){
-        btn.setAttribute('aria-pressed', completedActs[a]);
-        btn.textContent = completedActs[a] ? `Ato ${a} concluído` : `Marcar Ato ${a} como concluído`;
-      }
-    });
-    clickCountEl.textContent = interactionCount;
-    // Se todos completos, mostra banner
-    const allDone = ACTS.every(a => completedActs[a]);
-    completionBanner.hidden = !allDone;
-  }
-
-  // Navegação entre atos
-  function showAct(actNumber){
-    document.querySelectorAll('.act').forEach(el=>{
-      el.hidden = String(el.dataset.act) !== String(actNumber);
-    });
-    // Marca nav buttons aria-pressed
-    navBtns.forEach(nb=>{
-      const pressed = nb.dataset.act === String(actNumber);
-      nb.setAttribute('aria-pressed', pressed);
-    });
-    // Move foco para o título do ato
-    const actEl = document.getElementById(`act-${actNumber}`);
-    if(actEl){
-      const h2 = actEl.querySelector('h2');
-      h2 && h2.focus && h2.setAttribute('tabindex','-1') && h2.focus();
-    }
-  }
-
-  // Eventos nav
-  navBtns.forEach(b=>{
-    b.addEventListener('click', () => showAct(b.dataset.act));
-    b.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); }
-    });
-  });
-
-  // Dicas: contador de interações (exemplo de contagem dinâmica)
-  tipBtns.forEach(tb=>{
-    tb.addEventListener('click', () => {
-      interactionCount++;
-      storage.set('interactionCount', interactionCount);
-      clickCountEl.textContent = interactionCount;
-      // Exibe dica em um alert acessível — em app real, usar region/tooltip
-      const act = tb.closest('.act');
-      const actNum = act ? act.dataset.act : '—';
-      const message = `Dica do Ato ${actNum}: Lembre-se de adaptar sua build conforme a fase do chefe. (Interações: ${interactionCount})`;
-      // Use polite live region update
-      const lr = document.createElement('div');
-      lr.setAttribute('aria-live','polite');
-      lr.style.position='absolute';lr.style.left='-9999px';
-      lr.textContent = message;
-      document.body.appendChild(lr);
-      setTimeout(()=>document.body.removeChild(lr),2000);
-    });
-  });
-
-  // Marcar ato concluído
-  completeBtns.forEach(cb=>{
-    cb.addEventListener('click', () => {
-      const act = cb.dataset.act;
-      completedActs[act] = true;
-      storage.set('completedActs', completedActs);
-      updateProgressUI();
-    });
-  });
-
-  resetBtn.addEventListener('click', () => {
-    if(confirm('Resetar todo o progresso e interações?')){
-      interactionCount = 0;
-      completedActs = {1:false,2:false,3:false};
-      storage.set('interactionCount', interactionCount);
-      storage.set('completedActs', completedActs);
-      updateProgressUI();
-    }
-  });
-
-  // Inicialização: mostrar Ato 1 por padrão
-  if(!document.querySelector('.act:not([hidden])')) showAct(1);
-  updateProgressUI();
-
-  // Lógica condicional adicional: se interações > 10 e nem todos completos, sugerir descanso
-  setInterval(()=>{
-    if(interactionCount > 10 && !ACTS.every(a=>completedActs[a])){
-      // notificar o usuário de forma não intrusiva
-      console.info('Lembrete: faça pausas regulares para manter a concentração.');
-    }
-  }, 60000);
-
-  // Expor poucas funcionalidades para depuração (opcional)
-  window.__guide = {showAct, getState:() => ({interactionCount, completedActs, theme})};
 })();
