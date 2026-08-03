@@ -100,17 +100,23 @@ body{
   transition:transform .22s cubic-bezier(.2,.9,.25,1);
   transform: translateX(0);
 }
-/* Quando tema azul está ativo, desloca o "toggle" para direita e ajusta borda/icone */
+/* Quando tema azul está ativo, desloca o "toggle" para direita */
 html[data-theme="blue"] .theme-toggle .toggle-switch::after{
   transform: translateX(16px);
 }
 
 /* CARTÕES e LAYOUT */
-.main-nav{display:none} /* caso ainda exista, esconder */
+.main-nav{display:none}
 .card{background:var(--card);padding:1rem;border-radius:var(--radius);margin:1rem 0;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
 
 .grid{display:flex;gap:1rem;flex-wrap:wrap}
 .bosses-preview article{flex:1 1 220px;padding:.6rem;border-radius:8px;background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent)}
+
+/* ACTS (Ato1/Ato2/Ato3) */
+.act-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:1rem}
+.act-card{background:rgba(255,255,255,0.06);padding:12px;border-radius:10px;color:var(--card)}
+.act-card h3{margin:0 0 .4rem 0}
+.act-card p{margin:0;color:rgba(255,255,255,0.92);font-size:.95rem}
 
 /* PROGRESSO */
 .progress-wrap{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
@@ -152,7 +158,6 @@ html[data-theme="blue"] .theme-toggle .toggle-switch::after{
   position:relative;
   box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
 }
-/* triângulo pequeno para o balão (pseudo) */
 .boss-note::after{
   content:'';
   position:absolute;
@@ -174,7 +179,8 @@ html[data-theme="blue"] .theme-toggle .toggle-switch::after{
 .help{font-size:.9rem;color:var(--muted);margin-top:.6rem}
 .note{font-weight:600;color:var(--muted);margin-top:.4rem}
 
-.page-footer{font-size:.9rem;padding-top:1rem;color:var(--muted)}
+/* Rodapé */
+.page-footer{font-size:.95rem;padding-top:1rem;color:var(--muted)}
 
 /* Modal */
 .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);visibility:hidden;opacity:0;transition:opacity .18s ease}
@@ -189,6 +195,7 @@ html[data-theme="blue"] .theme-toggle .toggle-switch::after{
 @media (min-width:900px){
   main{display:grid;grid-template-columns:2fr 1fr;gap:1rem}
   .bosses-preview{display:flex}
+  .act-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important}
