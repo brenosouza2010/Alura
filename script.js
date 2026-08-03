@@ -1,4 +1,4 @@
-// script.js - tema: red <-> blue, contadores, progresso, export/import, atalhos e dicas
+// script.js - atualizado: removidos atalhos do contador/progresso (mantidos apenas botões e Escape para modal)
 (function(){
   "use strict";
 
@@ -193,14 +193,13 @@
       themeToggle.setAttribute('aria-label','Tema vermelho ativo — pressione para mudar para azul');
     }
     if(save) localStorage.setItem(THEME_KEY, theme);
-    // Atualiza ícone do botão (pequena animação visual via CSS)
   }
   themeToggle.addEventListener('click', () => {
     const isBlue = document.documentElement.getAttribute('data-theme') === 'blue';
     setTheme(isBlue ? 'red' : 'blue');
   });
 
-  // Event listeners
+  // Event listeners (botões)
   resetBtn.addEventListener('click', resetAll);
   markAllBtn.addEventListener('click', markAll);
   exportBtn.addEventListener('click', exportState);
@@ -213,21 +212,14 @@
 
   closeModalBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+  // Keyboard: apenas Escape fecha modal (atalhos do contador foram removidos)
   document.addEventListener('keydown', (e) => {
-    // Não ativar atalhos quando dentro de campos de texto
-    const tag = document.activeElement && document.activeElement.tagName.toLowerCase();
+    const tag = document.activeElement && document.activeElement.tagName && document.activeElement.tagName.toLowerCase();
     if(tag === 'input' || tag === 'textarea') return;
 
     if(e.key === 'Escape'){
       if(modal.getAttribute('aria-hidden') === 'false') closeModal();
-    } else if(e.key === 'r' || e.key === 'R'){
-      resetAll();
-    } else if(e.key === 'm' || e.key === 'M'){
-      markAll();
-    } else if(e.key === 'e' || e.key === 'E'){
-      exportState();
-    } else if(e.key === 'i' || e.key === 'I'){
-      importFileInput.click();
     }
   });
 
