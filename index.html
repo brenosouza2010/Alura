@@ -18,7 +18,6 @@
       <div class="header-actions" role="toolbar" aria-label="Ações do cabeçalho">
         <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Alternar tema (vermelho/azul)">
           <span class="theme-icon" aria-hidden="true">
-            <!-- pequeno ícone cromático -->
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <defs>
                 <linearGradient id="g1" x1="0" x2="1">
@@ -35,13 +34,28 @@
       </div>
     </div>
 
-    <!-- Navegação removida por pedido (viagem rápida entre categorias) -->
+    <!-- navegação rápida removida por pedido -->
   </header>
 
   <main id="main" class="container" role="main">
     <section id="overview" class="card">
       <h2>Visão geral</h2>
       <p>Este guia renovado ajuda a planejar e acompanhar sua jornada para zerar Silksong no modo <strong>Alma de Aço</strong>. Use as ferramentas abaixo (barra de progresso, contadores e export/import) para controlar seu avanço e colaborar com colegas.</p>
+
+      <div class="act-grid" aria-label="Atos">
+        <div class="act-card">
+          <h3>Ato 1</h3>
+          <p>Inicie com exploração controlada: aprenda movimentos, pegue ferramentas essenciais e descubra rotas iniciais.</p>
+        </div>
+        <div class="act-card">
+          <h3>Ato 2</h3>
+          <p>Expanda rotas, foque em chefes médios e priorize melhorias que aumentem suas chances nas lutas principais.</p>
+        </div>
+        <div class="act-card">
+          <h3>Ato 3</h3>
+          <p>Consolide equipamentos e habilidades, enfrente chefes finais e finalize a sequência de progressão.</p>
+        </div>
+      </div>
     </section>
 
     <section id="estrategias" class="card">
@@ -66,14 +80,14 @@
       </div>
 
       <div class="controls-top">
-        <button id="mark-all" title="Marcar todos (atalho: M)">Marcar todos</button>
-        <button id="reset" title="Resetar contadores (atalho: R)">Resetar</button>
-        <button id="export" title="Exportar progresso (atalho: E)">Exportar</button>
-        <button id="import-btn" title="Importar progresso (atalho: I)">Importar</button>
+        <button id="mark-all" title="Marcar todos">Marcar todos</button>
+        <button id="reset" title="Resetar contadores">Resetar</button>
+        <button id="export" title="Exportar progresso">Exportar</button>
+        <button id="import-btn" title="Importar progresso">Importar</button>
         <input id="import-file" type="file" accept="application/json" class="visually-hidden" />
       </div>
 
-      <!-- Lista de chefes: cada "balão" agora com layout melhor e nota em balão separado -->
+      <!-- Lista de chefes -->
       <div class="boss-list" role="list" aria-label="Lista de chefes">
         <template id="boss-template">
           <div class="boss" role="listitem">
@@ -93,7 +107,7 @@
         </template>
       </div>
 
-      <p class="help">Atalhos: <strong>M</strong> = marcar todos, <strong>R</strong> = reset, <strong>E</strong> = exportar, <strong>I</strong> = importar. Use Enter/Space nas ações para acessibilidade.</p>
+      <p class="help">Use os botões acima para gerenciar seu progresso. (Atalhos de teclado foram removidos — apenas os botões permanecem.)</p>
     </section>
 
     <section id="dicas" class="card">
@@ -108,25 +122,18 @@
       <p class="note">Nota: foque apenas em ações que aumentem a porcentagem de jogo; conteúdo secundário não relacionado ao progresso pode ser ignorado.</p>
     </section>
 
-    <aside id="checklist" class="card" aria-labelledby="checklist-title">
-      <h2 id="checklist-title">Checklist rápido</h2>
-      <ul>
-        <li>Revisar charms e recursos</li>
-        <li>Mapear rotas e checkpoints</li>
-        <li>Praticar padrões em salas de desafio</li>
-      </ul>
-    </aside>
+    <!-- checklist removido por pedido -->
 
-    <section id="acessibilidade" class="card">
-      <h2>Acessibilidade e Ética</h2>
-      <p>Site otimizado com landmarks, roles, aria-labels, foco visível e redução de movimento. Ao compartilhar guias, sempre credite autores e fontes originais e evite práticas que prejudiquem outros jogadores.</p>
-    </section>
-
-    <footer id="creditos" class="card page-footer" role="contentinfo">
-      <h2>Créditos e Referências</h2>
-      <p>Autor: Breno Souza (exemplo). Inclua seus colaboradores no README e mantenha referências às fontes utilizadas.</p>
-    </footer>
   </main>
+
+  <!-- Rodapé unificado: créditos + acessibilidade/ética -->
+  <footer id="creditos" class="card page-footer" role="contentinfo">
+    <h2>Créditos e Referências</h2>
+    <p>Autor: Breno Souza (exemplo). Inclua seus colaboradores no README e mantenha referências às fontes utilizadas.</p>
+
+    <h3>Acessibilidade e Ética</h3>
+    <p>Site otimizado com landmarks, roles, aria-labels, foco visível e redução de movimento. Ao compartilhar guias, sempre credite autores e fontes originais e evite práticas que prejudiquem outros jogadores.</p>
+  </footer>
 
   <!-- Modal de conclusão -->
   <div id="completion-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
