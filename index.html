@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Guia: Zerar Silksong no Alma de Aço</title>
-  <meta name="description" content="Guia passo a passo para zerar Hollow Knight: Silksong no modo Alma de Aço — dicas, checklist e contadores interativos." />
+  <title>Guia: Zerar Silksong — Alma de Aço (versão renovada)</title>
+  <meta name="description" content="Guia interativo para zerar Hollow Knight: Silksong no modo Alma de Aço — contadores, progresso, export/import e acessibilidade." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -13,7 +13,7 @@
   <header class="site-header" role="banner">
     <div class="container header-row">
       <h1 class="site-title">Guia: Zerar Silksong — Alma de Aço</h1>
-      <div class="header-actions">
+      <div class="header-actions" role="toolbar" aria-label="Ações do cabeçalho">
         <button id="theme-toggle" aria-pressed="false" aria-label="Alternar tema">Tema</button>
       </div>
     </div>
@@ -21,9 +21,9 @@
     <nav class="main-nav" role="navigation" aria-label="Navegação principal">
       <ul>
         <li><a href="#overview">Visão geral</a></li>
-        <li><a href="#preparacao">Preparação</a></li>
-        <li><a href="#estrategias">Estratégias por chefe</a></li>
+        <li><a href="#estrategias">Estratégias</a></li>
         <li><a href="#contador">Contadores</a></li>
+        <li><a href="#dicas">Dicas</a></li>
         <li><a href="#acessibilidade">Acessibilidade</a></li>
         <li><a href="#creditos">Créditos</a></li>
       </ul>
@@ -32,91 +32,99 @@
 
   <main id="main" class="container" role="main">
     <section id="overview" class="card">
-      <header><h2>Visão geral</h2></header>
-      <p>Este guia ajuda a planejar e acompanhar sua jornada para zerar Silksong no modo <strong>Alma de Aço</strong>. Use os contadores para marcar chefes vencidos, siga o checklist e ative o tema escuro para jogar à noite.</p>
+      <h2>Visão geral</h2>
+      <p>Este guia renovado ajuda a planejar e acompanhar sua jornada para zerar Silksong no modo <strong>Alma de Aço</strong>. Use as ferramentas abaixo (barra de progresso, contadores e export/import) para controlar seu avanço e colaborar com colegas.</p>
     </section>
 
-    <section id="preparacao" class="card">
-      <header><h2>Preparação</h2></header>
-      <ul>
-        <li>Conheça os movimentos (roll, dash, counters).</li>
-        <li>Pratique padrões de ataque em salas de desafio.</li>
-        <li>Monte um checklist de recursos e curas.</li>
-      </ul>
-    </section>
-
-    <section id="estrategias" class="card grid">
-      <header><h2>Estratégias por chefe</h2></header>
-      <article class="boss-card">
-        <h3>Chefe: Aranha Sufocada</h3>
-        <p>Dica: mantenha distância, ataque após o salto. Use esquiva lateral.</p>
-      </article>
-      <article class="boss-card">
-        <h3>Chefe: Coral Rainha</h3>
-        <p>Dica: foque nos adds e feche posição quando as conchas caírem.</p>
-      </article>
-      <article class="boss-card">
-        <h3>Chefe: Mestre das Lâminas</h3>
-        <p>Dica: memorize a sequência de spins para contra-atacar com precisão.</p>
-      </article>
+    <section id="estrategias" class="card">
+      <h2>Estratégias por chefe (resumo)</h2>
+      <div class="grid bosses-preview" aria-hidden="true">
+        <article><h3>Aranha Sufocada</h3><p>Distância e contra-ataque após o pulo.</p></article>
+        <article><h3>Coral Rainha</h3><p>Priorize adds e evite ficar embaixo.</p></article>
+        <article><h3>Mestre das Lâminas</h3><p>Conte os spins e contra-ataque no timing.</p></article>
+      </div>
+      <p>Ver as estratégias completas nos guias de comunidade e nos wikis — sempre cite as fontes.</p>
     </section>
 
     <section id="contador" class="card">
-      <header><h2>Contadores de chefes</h2></header>
-      <p>Marque aqui os chefes que você já derrotou. Os valores são salvos no seu navegador.</p>
+      <h2>Contadores & Progresso</h2>
+      <p id="status" class="visually-hidden" aria-live="polite"></p>
 
-      <div class="boss-list" role="region" aria-label="Lista de chefes">
+      <div class="progress-wrap" aria-hidden="false">
+        <div id="progress" class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" aria-label="Progresso de chefes">
+          <span id="progress-bar" class="progress-bar" style="width:0%"></span>
+        </div>
+        <div class="progress-text"><span id="completed-count">0</span>/<span id="total-count">6</span></div>
+      </div>
+
+      <div class="controls-top">
+        <button id="mark-all" title="Marcar todos (atalho: M)">Marcar todos</button>
+        <button id="reset" title="Resetar contadores (atalho: R)">Resetar</button>
+        <button id="export" title="Exportar progresso (atalho: E)">Exportar</button>
+        <button id="import-btn" title="Importar progresso (atalho: I)">Importar</button>
+        <input id="import-file" type="file" accept="application/json" class="visually-hidden" />
+      </div>
+
+      <div class="boss-list" role="list" aria-label="Lista de chefes">
         <template id="boss-template">
-          <div class="boss">
-            <span class="boss-name"></span>
-            <div class="controls">
-              <button class="dec" aria-label="Remover uma vitória">−</button>
+          <div class="boss" role="listitem">
+            <div class="boss-info">
+              <span class="boss-name"></span>
+              <small class="boss-note"></small>
+            </div>
+            <div class="boss-controls" role="group" aria-label="Controles do chefe">
+              <button class="dec" aria-label="Remover vitória">−</button>
               <span class="count" aria-live="polite">0</span>
-              <button class="inc" aria-label="Adicionar uma vitória">+</button>
+              <button class="inc" aria-label="Adicionar vitória">+</button>
             </div>
           </div>
         </template>
       </div>
 
-      <div class="summary">
-        <p>Chefes vencidos: <strong id="total">0</strong> / <span id="total-target">3</span></p>
-        <div class="buttons-row">
-          <button id="reset">Resetar</button>
-          <button id="mark-all">Marcar todos</button>
-        </div>
-      </div>
+      <p class="help">Atalhos: <strong>M</strong> = marcar todos, <strong>R</strong> = reset, <strong>E</strong> = exportar, <strong>I</strong> = importar. Use Enter/Space nas ações para acessibilidade.</p>
     </section>
 
-    <aside id="checklist" class="card">
-      <header><h2>Checklist rápido</h2></header>
+    <section id="dicas" class="card">
+      <h2>Dicas — Interações simples</h2>
+      <p>Concentre-se nas ações que aumentam seu progresso no jogo. Ignore conteúdo adicional que não esteja ligado ao aumento da porcentagem de conclusão.</p>
       <ul>
-        <li>Carteira de charms revisada</li>
-        <li>Mapeamento das rotas</li>
-        <li>Treino em salas de oscilação</li>
+        <li><strong>Explore</strong> — descubra atalhos, salas secretas e pontos de vantagem que ajudam a progredir mais rápido.</li>
+        <li><strong>Pegue ferramentas</strong> — priorize itens e ferramentas que ampliam opções de combate ou mobilidade.</li>
+        <li><strong>Trace a Rota</strong> — defina um caminho objetivo para cobrir áreas essenciais e reduzir tempo perdido.</li>
+        <li><strong>Melhore a Agulha</strong> — aprimore suas habilidades e equipamentos que impactam diretamente nas lutas de chefe.</li>
+      </ul>
+      <p class="note">Nota: foque apenas em ações que aumentem a porcentagem de jogo; conteúdo secundário não relacionado ao progresso pode ser ignorado.</p>
+    </section>
+
+    <aside id="checklist" class="card" aria-labelledby="checklist-title">
+      <h2 id="checklist-title">Checklist rápido</h2>
+      <ul>
+        <li>Revisar charms e recursos</li>
+        <li>Mapear rotas e checkpoints</li>
+        <li>Praticar padrões em salas de desafio</li>
       </ul>
     </aside>
 
     <section id="acessibilidade" class="card">
-      <header><h2>Acessibilidade e Ética</h2></header>
-      <p>Este site usa HTML semântico, teclas focáveis, labels e considerações de redução de movimento. Ao compartilhar guias, credite autores e fontes originais — respeite propriedade intelectual.</p>
+      <h2>Acessibilidade e Ética</h2>
+      <p>Site otimizado com landmarks, roles, aria-labels, foco visível e redução de movimento. Ao compartilhar guias, sempre credite autores e fontes originais e evite práticas que prejudiquem outros jogadores.</p>
     </section>
 
     <footer id="creditos" class="card page-footer" role="contentinfo">
       <h2>Créditos e Referências</h2>
-      <p>Autores: Breno Souza (projeto base). Trabalho colaborativo: adicione seu nome e referências no README.</p>
-      <p>Referências: <em>Team Cherry</em> (Silksong), wikis de comunidade e guias de jogabilidade (use com responsabilidade).</p>
+      <p>Autor: Breno Souza (exemplo). Inclua seus colaboradores no README e mantenha referências às fontes utilizadas.</p>
     </footer>
   </main>
 
-  <!-- Modal acessível de conclusão -->
+  <!-- Modal de conclusão -->
   <div id="completion-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
     <div class="modal-content">
       <h3 id="modal-title">Parabéns!</h3>
-      <p>Todos os chefes foram vencidos — Alma de Aço zerado!</p>
+      <p>Você marcou todos os chefes — progresso concluído para Alma de Aço!</p>
       <button id="close-modal">Fechar</button>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
