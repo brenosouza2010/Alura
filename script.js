@@ -186,11 +186,14 @@
     if(theme === 'blue'){
       document.documentElement.setAttribute('data-theme','blue');
       themeToggle.setAttribute('aria-pressed','true');
+      themeToggle.setAttribute('aria-label','Tema azul ativo — pressione para voltar ao vermelho');
     }else{
       document.documentElement.removeAttribute('data-theme'); // default red variables are :root
       themeToggle.setAttribute('aria-pressed','false');
+      themeToggle.setAttribute('aria-label','Tema vermelho ativo — pressione para mudar para azul');
     }
     if(save) localStorage.setItem(THEME_KEY, theme);
+    // Atualiza ícone do botão (pequena animação visual via CSS)
   }
   themeToggle.addEventListener('click', () => {
     const isBlue = document.documentElement.getAttribute('data-theme') === 'blue';
