@@ -3,165 +3,120 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Silksong — Alma de Aço: Guia (Ato 1, 2, 3)</title>
+  <title>Guia: Zerar Silksong no Alma de Aço</title>
+  <meta name="description" content="Guia passo a passo para zerar Hollow Knight: Silksong no modo Alma de Aço — dicas, checklist e contadores interativos." />
   <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="Guia passo a passo para zerar Alma de Aço em Silksong (Ato 1, 2 e 3). Projeto didático: HTML semântico, CSS (Flexbox), JS (DOM), acessibilidade e UX." />
-  <script src="script.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Ir para o conteúdo principal</a>
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
 
   <header class="site-header" role="banner">
-    <div class="container header-inner">
-      <h1>Silksong — Alma de Aço</h1>
-      <p class="tagline">Guia por atos — Ato 1, Ato 2, Ato 3. Foco em práticas acessíveis e interativas.</p>
-      <div class="header-controls">
-        <button id="theme-toggle" aria-pressed="false" aria-label="Alternar tema">Alternar tema</button>
-        <button id="show-stats" aria-haspopup="dialog" aria-label="Mostrar estatísticas">Estatísticas</button>
+    <div class="container header-row">
+      <h1 class="site-title">Guia: Zerar Silksong — Alma de Aço</h1>
+      <div class="header-actions">
+        <button id="theme-toggle" aria-pressed="false" aria-label="Alternar tema">Tema</button>
       </div>
     </div>
-    <nav class="primary-nav" role="navigation" aria-label="Navegação dos atos">
-      <div class="container nav-inner" role="menubar">
-        <button class="nav-btn" data-act="1" role="menuitem" aria-pressed="false">Ato 1</button>
-        <button class="nav-btn" data-act="2" role="menuitem" aria-pressed="false">Ato 2</button>
-        <button class="nav-btn" data-act="3" role="menuitem" aria-pressed="false">Ato 3</button>
-        <a class="nav-link" href="#references">Referências</a>
-      </div>
+
+    <nav class="main-nav" role="navigation" aria-label="Navegação principal">
+      <ul>
+        <li><a href="#overview">Visão geral</a></li>
+        <li><a href="#preparacao">Preparação</a></li>
+        <li><a href="#estrategias">Estratégias por chefe</a></li>
+        <li><a href="#contador">Contadores</a></li>
+        <li><a href="#acessibilidade">Acessibilidade</a></li>
+        <li><a href="#creditos">Créditos</a></li>
+      </ul>
     </nav>
   </header>
 
-  <main id="main" class="container main" role="main">
-    <aside class="sidebar" aria-label="Painel lateral">
-      <section class="progress" aria-live="polite" aria-atomic="true">
-        <h2>Progresso</h2>
-        <ul id="progress-list">
-          <li>Ato 1: <span id="status-1">Pendente</span></li>
-          <li>Ato 2: <span id="status-2">Pendente</span></li>
-          <li>Ato 3: <span id="status-3">Pendente</span></li>
-        </ul>
-        <div class="counter">
-          <h3>Interações</h3>
-          <p>Cliques em dicas: <strong id="click-count">0</strong></p>
+  <main id="main" class="container" role="main">
+    <section id="overview" class="card">
+      <header><h2>Visão geral</h2></header>
+      <p>Este guia ajuda a planejar e acompanhar sua jornada para zerar Silksong no modo <strong>Alma de Aço</strong>. Use os contadores para marcar chefes vencidos, siga o checklist e ative o tema escuro para jogar à noite.</p>
+    </section>
+
+    <section id="preparacao" class="card">
+      <header><h2>Preparação</h2></header>
+      <ul>
+        <li>Conheça os movimentos (roll, dash, counters).</li>
+        <li>Pratique padrões de ataque em salas de desafio.</li>
+        <li>Monte um checklist de recursos e curas.</li>
+      </ul>
+    </section>
+
+    <section id="estrategias" class="card grid">
+      <header><h2>Estratégias por chefe</h2></header>
+      <article class="boss-card">
+        <h3>Chefe: Aranha Sufocada</h3>
+        <p>Dica: mantenha distância, ataque após o salto. Use esquiva lateral.</p>
+      </article>
+      <article class="boss-card">
+        <h3>Chefe: Coral Rainha</h3>
+        <p>Dica: foque nos adds e feche posição quando as conchas caírem.</p>
+      </article>
+      <article class="boss-card">
+        <h3>Chefe: Mestre das Lâminas</h3>
+        <p>Dica: memorize a sequência de spins para contra-atacar com precisão.</p>
+      </article>
+    </section>
+
+    <section id="contador" class="card">
+      <header><h2>Contadores de chefes</h2></header>
+      <p>Marque aqui os chefes que você já derrotou. Os valores são salvos no seu navegador.</p>
+
+      <div class="boss-list" role="region" aria-label="Lista de chefes">
+        <template id="boss-template">
+          <div class="boss">
+            <span class="boss-name"></span>
+            <div class="controls">
+              <button class="dec" aria-label="Remover uma vitória">−</button>
+              <span class="count" aria-live="polite">0</span>
+              <button class="inc" aria-label="Adicionar uma vitória">+</button>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div class="summary">
+        <p>Chefes vencidos: <strong id="total">0</strong> / <span id="total-target">3</span></p>
+        <div class="buttons-row">
+          <button id="reset">Resetar</button>
+          <button id="mark-all">Marcar todos</button>
         </div>
-        <button id="reset-progress" aria-label="Resetar progresso">Resetar progresso</button>
-      </section>
-    </aside>
-
-    <section class="content" id="content" aria-live="polite">
-      <!-- ATO 1 -->
-      <article id="act-1" class="act" data-act="1" hidden>
-        <header>
-          <h2>Ato 1 — Preparação e Primeiro Confronto</h2>
-          <p class="lead">Objetivos principais, equipamentos recomendados e passo a passo inicial.</p>
-        </header>
-        <section>
-          <h3>Resumo</h3>
-          <p>Descrição sucinta do objetivo do ato e das mecânicas importantes.</p>
-        </section>
-
-        <section class="tips">
-          <h3>Dicas essenciais</h3>
-          <ul>
-            <li>Mapa: explore corredores laterais para itens de resistência.</li>
-            <li>Parry: aprenda o timing do inimigo X.</li>
-            <li>Build sugerida: agilidade + armadura leve.</li>
-          </ul>
-          <button class="tip-btn" data-tip="1">Mostrar dica > (conta interação)</button>
-        </section>
-
-        <section class="tasks">
-          <h3>Tarefas do Ato 1</h3>
-          <ol>
-            <li>Encontrar a chave do portão</li>
-            <li>Derrotar o guarda mecânico</li>
-            <li>Ativar o mecanismo</li>
-          </ol>
-          <button class="complete-btn" data-act="1" aria-pressed="false">Marcar Ato 1 como concluído</button>
-        </section>
-      </article>
-
-      <!-- ATO 2 -->
-      <article id="act-2" class="act" data-act="2" hidden>
-        <header>
-          <h2>Ato 2 — Labirinto e Mestre de Testes</h2>
-          <p class="lead">Desafios, puzzles e padrões de ataque do chefe.</p>
-        </header>
-
-        <section class="tips">
-          <h3>Dicas essenciais</h3>
-          <ul>
-            <li>Observe padrões de luz para resolver puzzles.</li>
-            <li>Use área para agrupar inimigos.</li>
-            <li>Economize recursos para o chefe intermediário.</li>
-          </ul>
-          <button class="tip-btn" data-tip="2">Mostrar dica > (conta interação)</button>
-        </section>
-
-        <section class="tasks">
-          <h3>Tarefas do Ato 2</h3>
-          <ol>
-            <li>Atingir o farol norte</li>
-            <li>Resolver o puzzle circular</li>
-            <li>Derrotar o Guardião da Forja</li>
-          </ol>
-          <button class="complete-btn" data-act="2" aria-pressed="false">Marcar Ato 2 como concluído</button>
-        </section>
-      </article>
-
-      <!-- ATO 3 -->
-      <article id="act-3" class="act" data-act="3" hidden>
-        <header>
-          <h2>Ato 3 — Confronto Final: Alma de Aço</h2>
-          <p class="lead">Estratégias para a batalha final, mecânicas e posicionamento.</p>
-        </header>
-
-        <section class="tips">
-          <h3>Dicas essenciais</h3>
-          <ul>
-            <li>Fase de escudo: foque em movimentos laterais e contra-ataque.</li>
-            <li>Fase de esquiva segura: fique perto das plataformas centrais.</li>
-            <li>Use buffs temporários antes da última barra de vida.</li>
-          </ul>
-          <button class="tip-btn" data-tip="3">Mostrar dica > (conta interação)</button>
-        </section>
-
-        <section class="tasks">
-          <h3>Tarefas do Ato 3</h3>
-          <ol>
-            <li>Quebrar o escudo 3 vezes</li>
-            <li>Sobreviver à chuva de aço</li>
-            <li>Finalizar com ataque carregado</li>
-          </ol>
-          <button class="complete-btn" data-act="3" aria-pressed="false">Marcar Ato 3 como concluído</button>
-        </section>
-      </article>
-
-      <div id="completion-banner" role="status" aria-live="assertive" class="completion" hidden>
-        <p>Parabéns! Todos os atos foram concluídos — Alma de Aço zerada!</p>
       </div>
     </section>
+
+    <aside id="checklist" class="card">
+      <header><h2>Checklist rápido</h2></header>
+      <ul>
+        <li>Carteira de charms revisada</li>
+        <li>Mapeamento das rotas</li>
+        <li>Treino em salas de oscilação</li>
+      </ul>
+    </aside>
+
+    <section id="acessibilidade" class="card">
+      <header><h2>Acessibilidade e Ética</h2></header>
+      <p>Este site usa HTML semântico, teclas focáveis, labels e considerações de redução de movimento. Ao compartilhar guias, credite autores e fontes originais — respeite propriedade intelectual.</p>
+    </section>
+
+    <footer id="creditos" class="card page-footer" role="contentinfo">
+      <h2>Créditos e Referências</h2>
+      <p>Autores: Breno Souza (projeto base). Trabalho colaborativo: adicione seu nome e referências no README.</p>
+      <p>Referências: <em>Team Cherry</em> (Silksong), wikis de comunidade e guias de jogabilidade (use com responsabilidade).</p>
+    </footer>
   </main>
 
-  <footer class="site-footer" role="contentinfo" id="references">
-    <div class="container">
-      <p>Autores: <strong>Breno Souza</strong> (exemplo). Projeto didático — Start by Alura.</p>
-      <p>Ética e acessibilidade: este conteúdo prioriza clareza, não incentiva trapaça e recomenda respeito à comunidade de jogadores.</p>
-      <h4>Referências</h4>
-      <ul>
-        <li><a href="https://www.hellpointgame.com/" target="_blank" rel="noopener noreferrer">Referência de design (exemplos)</a></li>
-        <li><a href="https://www.w3.org/WAI/" target="_blank" rel="noopener noreferrer">WAI — Acessibilidade Web</a></li>
-      </ul>
-      <p>Licença: CC BY-SA. Para colaborar: edite o arquivo README.md e proponha contribuições via Git.</p>
+  <!-- Modal acessível de conclusão -->
+  <div id="completion-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <h3 id="modal-title">Parabéns!</h3>
+      <p>Todos os chefes foram vencidos — Alma de Aço zerado!</p>
+      <button id="close-modal">Fechar</button>
     </div>
-  </footer>
+  </div>
 
-  <!-- Modal de estatísticas simples -->
-  <dialog id="stats-modal" aria-labelledby="stats-title">
-    <h3 id="stats-title">Estatísticas</h3>
-    <div id="stats-content"></div>
-    <menu>
-      <button id="close-stats">Fechar</button>
-    </menu>
-  </dialog>
+  <script src="script.js"></script>
 </body>
 </html>
