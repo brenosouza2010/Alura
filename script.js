@@ -1,150 +1,231 @@
-// script.js - interatividade: contadores, tema, lógica condicional e persistência
+// script.js - tema: red <-> blue, contadores, progresso, export/import, atalhos e dicas
 (function(){
   "use strict";
 
+  // Configuração de chefes (adicione/edite aqui)
   const bosses = [
-    { id: 'spider', name: 'Aranha Sufocada' },
-    { id: 'coral', name: 'Coral Rainha' },
-    { id: 'blade', name: 'Mestre das Lâminas' }
+    { id: 'spider', name: 'Aranha Sufocada', note: 'Fuja do salto' },
+    { id: 'coral', name: 'Coral Rainha', note: 'Priorize adds' },
+    { id: 'blade', name: 'Mestre das Lâminas', note: 'Conte spins' },
+    { id: 'flowers', name: 'Rainha das Flores', note: 'Evite áreas com espinhos' },
+    { id: 'tome', name: 'Guardião do Tomo', note: 'Quebre o escudo primeiro' },
+    { id: 'weblord', name: 'Senhor das Teias', note: 'Use dash lateral' }
   ];
 
-  // Elementos
+  // Seletores
   const bossListEl = document.querySelector('.boss-list');
   const template = document.getElementById('boss-template');
-  const totalEl = document.getElementById('total');
-  const totalTargetEl = document.getElementById('total-target');
-  const resetBtn = document.getElementById('reset');
+  const totalCountEl = document.getElementById('total-count');
+  const completedCountEl = document.getElementById('completed-count');
+  const progressBar = document.getElementById('progress-bar');
+  const progressWrap = document.getElementById('progress') || document.querySelector('.progress');
   const markAllBtn = document.getElementById('mark-all');
+  const resetBtn = document.getElementById('reset');
+  const exportBtn = document.getElementById('export');
+  const importBtn = document.getElementById('import-btn');
+  const importFileInput = document.getElementById('import-file');
   const modal = document.getElementById('completion-modal');
   const closeModalBtn = document.getElementById('close-modal');
+  const statusRegion = document.getElementById('status');
   const themeToggle = document.getElementById('theme-toggle');
 
-  const STORAGE_KEY = 'silksong-alma-state-v1';
+  const STORAGE_KEY = 'silksong-v2-state';
+  const THEME_KEY = 'silksong-theme';
   let state = loadState();
 
-  // Inicializa UI
-  totalTargetEl.textContent = bosses.length;
+  // Inicialização
+  totalCountEl.textContent = bosses.length;
   renderBosses();
-  updateTotal();
+  updateProgress();
   restoreTheme();
 
-  // Renderiza itens a partir do template
+  // Render
   function renderBosses(){
     bossListEl.innerHTML = '';
     bosses.forEach(b => {
       const node = template.content.cloneNode(true);
       const bossEl = node.querySelector('.boss');
       const nameEl = node.querySelector('.boss-name');
+      const noteEl = node.querySelector('.boss-note');
       const incBtn = node.querySelector('.inc');
       const decBtn = node.querySelector('.dec');
       const countEl = node.querySelector('.count');
 
       bossEl.dataset.id = b.id;
       nameEl.textContent = b.name;
+      noteEl.textContent = b.note || '';
+
       const value = state[b.id] || 0;
       countEl.textContent = value;
 
-      incBtn.addEventListener('click', () => { changeCount(b.id, +1, countEl); });
-      decBtn.addEventListener('click', () => { changeCount(b.id, -1, countEl); });
-
-      // Keyboard accessible: Enter increments
-      incBtn.addEventListener('keydown', e => { if(e.key === 'Enter') changeCount(b.id, +1, countEl); });
-      decBtn.addEventListener('keydown', e => { if(e.key === 'Enter') changeCount(b.id, -1, countEl); });
+      // Eventos
+      incBtn.addEventListener('click', () => changeCount(b.id, +1, countEl));
+      decBtn.addEventListener('click', () => changeCount(b.id, -1, countEl));
+      incBtn.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); changeCount(b.id, +1, countEl); }});
+      decBtn.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); changeCount(b.id, -1, countEl); }});
 
       bossListEl.appendChild(node);
     });
   }
 
   function changeCount(id, delta, countEl){
-    const current = state[id] || 0;
-    const next = Math.max(0, current + delta);
+    const cur = state[id] || 0;
+    const next = Math.max(0, cur + delta);
     state[id] = next;
     countEl.textContent = next;
     saveState();
-    updateTotal();
+    updateProgress();
     checkCompletion();
+    announce(`Atualizado ${id}: ${next}`);
   }
 
-  function updateTotal(){
-    const total = bosses.reduce((acc,b) => acc + (state[b.id] || 0), 0);
-    totalEl.textContent = total;
+  function updateProgress(){
+    const completed = bosses.reduce((acc,b) => acc + ((state[b.id] || 0) > 0 ? 1 : 0), 0);
+    const total = bosses.length;
+    const pct = Math.round((completed / total) * 100);
+    progressBar.style.width = pct + '%';
+    if(progressWrap){
+      progressWrap.setAttribute('aria-valuenow', completed);
+      progressWrap.setAttribute('aria-valuetext', `${completed} de ${total} chefes`);
+    }
+    completedCountEl.textContent = completed;
+  }
+
+  function checkCompletion(){
+    const all = bosses.every(b => (state[b.id] || 0) > 0);
+    if(all) openModal();
   }
 
   function resetAll(){
     bosses.forEach(b => state[b.id] = 0);
     saveState();
     renderBosses();
-    updateTotal();
+    updateProgress();
     closeModal();
+    announce('Progresso resetado');
   }
 
   function markAll(){
     bosses.forEach(b => state[b.id] = 1);
     saveState();
     renderBosses();
-    updateTotal();
+    updateProgress();
     checkCompletion();
+    announce('Todos os chefes marcados');
   }
 
-  function checkCompletion(){
-    const allDone = bosses.every(b => (state[b.id] || 0) > 0);
-    if(allDone) openModal();
-  }
-
-  // Modal accessible
+  // Modal
   function openModal(){
     modal.setAttribute('aria-hidden','false');
-    // move focus para o botão fechar
     closeModalBtn.focus();
+    announce('Concluído! Você marcou todos os chefes.');
   }
   function closeModal(){
     modal.setAttribute('aria-hidden','true');
   }
 
-  // Event listeners
-  resetBtn.addEventListener('click', resetAll);
-  markAllBtn.addEventListener('click', markAll);
-  closeModalBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape') {
-      if(modal.getAttribute('aria-hidden') === 'false') closeModal();
-    }
-  });
+  // Export / Import
+  function exportState(){
+    const data = { created: new Date().toISOString(), state };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'silksong-progress.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    announce('Progresso exportado');
+  }
+
+  function importStateFile(file){
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const parsed = JSON.parse(reader.result);
+        if(parsed && parsed.state){
+          state = Object.assign({}, state, parsed.state);
+        }else if(parsed && typeof parsed === 'object'){
+          state = Object.assign({}, state, parsed);
+        }
+        saveState();
+        renderBosses();
+        updateProgress();
+        checkCompletion();
+        announce('Progresso importado');
+      }catch(e){
+        announce('Erro ao importar arquivo: formato inválido');
+        console.error(e);
+      }
+    };
+    reader.readAsText(file);
+  }
 
   // Persistence
   function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    }catch(e){ return {}; }
+    try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; }catch(e){ return {}; }
   }
-  function saveState(){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  function saveState(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){ console.error(e); } }
+
+  // Accessibility: announcer
+  function announce(message){
+    if(statusRegion){
+      statusRegion.textContent = message;
+      setTimeout(()=> { statusRegion.textContent = ''; }, 2500);
+    }
   }
 
-  // Theme toggle with persistence
+  // Theme: defaults to 'red' (degrade), toggle to 'blue'
   function restoreTheme(){
-    const saved = localStorage.getItem('silksong-theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = saved || (prefersDark ? 'dark' : 'light');
-    setTheme(theme);
+    const saved = localStorage.getItem(THEME_KEY);
+    const theme = saved || 'red';
+    setTheme(theme, false);
   }
-
-  function setTheme(theme){
-    if(theme === 'dark'){
-      document.documentElement.setAttribute('data-theme','dark');
+  function setTheme(theme, save = true){
+    if(theme === 'blue'){
+      document.documentElement.setAttribute('data-theme','blue');
       themeToggle.setAttribute('aria-pressed','true');
     }else{
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.removeAttribute('data-theme'); // default red variables are :root
       themeToggle.setAttribute('aria-pressed','false');
     }
-    localStorage.setItem('silksong-theme', theme);
+    if(save) localStorage.setItem(THEME_KEY, theme);
   }
-
   themeToggle.addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    setTheme(isDark ? 'light' : 'dark');
+    const isBlue = document.documentElement.getAttribute('data-theme') === 'blue';
+    setTheme(isBlue ? 'red' : 'blue');
+  });
+
+  // Event listeners
+  resetBtn.addEventListener('click', resetAll);
+  markAllBtn.addEventListener('click', markAll);
+  exportBtn.addEventListener('click', exportState);
+  importBtn.addEventListener('click', () => importFileInput.click());
+  importFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(file) importStateFile(file);
+    importFileInput.value = '';
+  });
+
+  closeModalBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    // Não ativar atalhos quando dentro de campos de texto
+    const tag = document.activeElement && document.activeElement.tagName.toLowerCase();
+    if(tag === 'input' || tag === 'textarea') return;
+
+    if(e.key === 'Escape'){
+      if(modal.getAttribute('aria-hidden') === 'false') closeModal();
+    } else if(e.key === 'r' || e.key === 'R'){
+      resetAll();
+    } else if(e.key === 'm' || e.key === 'M'){
+      markAll();
+    } else if(e.key === 'e' || e.key === 'E'){
+      exportState();
+    } else if(e.key === 'i' || e.key === 'I'){
+      importFileInput.click();
+    }
   });
 
 })();
