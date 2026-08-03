@@ -13,21 +13,29 @@
   <header class="site-header" role="banner">
     <div class="container header-row">
       <h1 class="site-title">Guia: Zerar Silksong — Alma de Aço</h1>
+
+      <!-- Botão de tema detalhado -->
       <div class="header-actions" role="toolbar" aria-label="Ações do cabeçalho">
-        <button id="theme-toggle" aria-pressed="false" aria-label="Alternar tema">Tema</button>
+        <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Alternar tema (vermelho/azul)">
+          <span class="theme-icon" aria-hidden="true">
+            <!-- pequeno ícone cromático -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1">
+                  <stop offset="0" stop-color="var(--accent-1)" />
+                  <stop offset="1" stop-color="var(--accent-2)" />
+                </linearGradient>
+              </defs>
+              <circle cx="12" cy="12" r="9" fill="url(#g1)" />
+            </svg>
+          </span>
+          <span class="theme-label">Tema</span>
+          <span class="toggle-switch" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
 
-    <nav class="main-nav" role="navigation" aria-label="Navegação principal">
-      <ul>
-        <li><a href="#overview">Visão geral</a></li>
-        <li><a href="#estrategias">Estratégias</a></li>
-        <li><a href="#contador">Contadores</a></li>
-        <li><a href="#dicas">Dicas</a></li>
-        <li><a href="#acessibilidade">Acessibilidade</a></li>
-        <li><a href="#creditos">Créditos</a></li>
-      </ul>
-    </nav>
+    <!-- Navegação removida por pedido (viagem rápida entre categorias) -->
   </header>
 
   <main id="main" class="container" role="main">
@@ -65,13 +73,17 @@
         <input id="import-file" type="file" accept="application/json" class="visually-hidden" />
       </div>
 
+      <!-- Lista de chefes: cada "balão" agora com layout melhor e nota em balão separado -->
       <div class="boss-list" role="list" aria-label="Lista de chefes">
         <template id="boss-template">
           <div class="boss" role="listitem">
-            <div class="boss-info">
-              <span class="boss-name"></span>
-              <small class="boss-note"></small>
+            <div class="boss-left">
+              <div class="boss-name-wrap">
+                <span class="boss-name"></span>
+              </div>
+              <div class="boss-note" aria-hidden="false"></div>
             </div>
+
             <div class="boss-controls" role="group" aria-label="Controles do chefe">
               <button class="dec" aria-label="Remover vitória">−</button>
               <span class="count" aria-live="polite">0</span>
