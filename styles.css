@@ -13,6 +13,8 @@
   --radius:14px;
   --title-size:2.25rem;
   --title-weight:800;
+  /* cor translúcida para cards (padrão vermelho) */
+  --card-overlay: rgba(255,247,247,0.92);
 }
 
 /* TEMA AZUL: quando data-theme="blue" */
@@ -26,6 +28,7 @@
   --accent-2: #2b6fb3;
   --focus: #9fd3ff;
   --progress-bg: rgba(0,0,0,0.06);
+  --card-overlay: rgba(242,249,255,0.94);
 }
 
 *{box-sizing:border-box}
@@ -33,28 +36,47 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  /* fundo contínuo e fixo: evita sensação de "faixa" ao rolar */
   background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+  background-attachment: fixed;
   color:var(--text);
   line-height:1.45;
   -webkit-font-smoothing:antialiased;
   min-height:100vh;
 }
 
+/* HEADER: tornamos transparente para não "quebrar" o degradê */
+.site-header{
+  background: transparent;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
 .container{max-width:var(--max-width);margin:0 auto;padding:1rem}
 .skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
 .skip-link:focus{position:static;width:auto;height:auto;padding:.5rem;background:var(--card);border:2px solid var(--accent-2);border-radius:6px}
 
-/* HEADER: título centralizado e grande */
+/* HEADER: título e brand */
 .header-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;padding-top:1rem}
+.brand{display:flex;align-items:center;gap:1rem}
+#site-logo{
+  display:block;
+  max-width:140px;
+  width:100%;
+  height:auto;
+  margin-right:0.25rem;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+}
 .site-title{
   font-size:var(--title-size);
   font-weight:var(--title-weight);
   margin:0;
   color:var(--card);
-  text-align:center;
+  text-align:left;
   letter-spacing:0.6px;
   text-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
+.site-tagline{margin:0;color:rgba(255,255,255,0.9);font-size:0.95rem}
 
 /* Botão de tema detalhado */
 .header-actions{display:flex;align-items:center;gap:.6rem}
@@ -100,14 +122,21 @@ body{
   transition:transform .22s cubic-bezier(.2,.9,.25,1);
   transform: translateX(0);
 }
-/* Quando tema azul está ativo, desloca o "toggle" para direita */
 html[data-theme="blue"] .theme-toggle .toggle-switch::after{
   transform: translateX(16px);
 }
 
 /* CARTÕES e LAYOUT */
-.main-nav{display:none}
-.card{background:var(--card);padding:1rem;border-radius:var(--radius);margin:1rem 0;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+/* tornamos os cards levemente translúcidos para o degradê aparecer por baixo */
+.card{
+  background: var(--card-overlay);
+  padding:1rem;
+  border-radius:var(--radius);
+  margin:1rem 0;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  /* borda sutil para legibilidade */
+  border: 1px solid rgba(0,0,0,0.04);
+}
 
 .grid{display:flex;gap:1rem;flex-wrap:wrap}
 .bosses-preview article{flex:1 1 220px;padding:.6rem;border-radius:8px;background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent)}
@@ -179,8 +208,8 @@ html[data-theme="blue"] .theme-toggle .toggle-switch::after{
 .help{font-size:.9rem;color:var(--muted);margin-top:.6rem}
 .note{font-weight:600;color:var(--muted);margin-top:.4rem}
 
-/* Rodapé */
-.page-footer{font-size:.95rem;padding-top:1rem;color:var(--muted)}
+/* Rodapé: transparente para o degradê continuar */
+.page-footer{font-size:.95rem;padding-top:1rem;color:var(--muted);background:transparent;border-top:none;}
 
 /* Modal */
 .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);visibility:hidden;opacity:0;transition:opacity .18s ease}
