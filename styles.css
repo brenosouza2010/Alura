@@ -56,30 +56,30 @@ body{
 .skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
 .skip-link:focus{position:static;width:auto;height:auto;padding:.5rem;background:var(--card);border:2px solid var(--accent-2);border-radius:6px}
 
-/* HEADER: título e brand */
-.header-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;padding-top:1rem}
-.brand{display:flex;align-items:center;gap:1rem}
+/* HEADER: logo grande e centralizada acima do título */
+.header-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding-top:1rem}
+.brand{display:flex;flex-direction:column;align-items:center;gap:.5rem}
 #site-logo{
   display:block;
-  max-width:140px;
+  max-width:360px; /* maior que antes */
   width:100%;
   height:auto;
-  margin-right:0.25rem;
-  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+  margin-bottom:0.2rem;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.25));
 }
 .site-title{
   font-size:var(--title-size);
   font-weight:var(--title-weight);
   margin:0;
   color:var(--card); /* título em branco sobre o degradê */
-  text-align:left;
+  text-align:center;
   letter-spacing:0.6px;
   text-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
 .site-tagline{margin:0;color:rgba(255,255,255,0.9);font-size:0.95rem}
 
 /* Botão de tema detalhado */
-.header-actions{display:flex;align-items:center;gap:.6rem}
+.header-actions{display:flex;align-items:center;gap:.6rem;margin-top:0.4rem}
 .theme-toggle{
   display:inline-flex;
   align-items:center;
@@ -135,22 +135,23 @@ html[data-theme="blue"] .theme-toggle .toggle-switch::after{
   margin:1rem 0;
   box-shadow:0 6px 18px rgba(0,0,0,0.08);
   border: 1px solid rgba(0,0,0,0.04);
+  color:var(--text); /* garante cor de texto padrão dentro dos cards */
 }
 
 .grid{display:flex;gap:1rem;flex-wrap:wrap}
 .bosses-preview article{flex:1 1 220px;padding:.6rem;border-radius:8px;background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent)}
 
 /* ACTS (Ato1/Ato2/Ato3) */
-/* cor do texto dos atos: usar --text (escuro) — antes estava var(--card) (branco) */
+/* forçamos texto escuro para evitar interferências de transparência */
 .act-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:1rem}
 .act-card{
   background: rgba(255,255,255,0.06);
   padding:12px;
   border-radius:10px;
-  color:var(--text); /* COR CORRIGIDA */
+  color:var(--text) !important; /* FORÇADO: texto escuro */
 }
-.act-card h3{margin:0 0 .4rem 0}
-.act-card p{margin:0;color:var(--muted);font-size:.95rem}
+.act-card h3{margin:0 0 .4rem 0;color:var(--text) !important}
+.act-card p{margin:0;color:var(--muted) !important;font-size:.95rem}
 
 /* PROGRESSO */
 .progress-wrap{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
@@ -216,7 +217,7 @@ html[data-theme="blue"] .theme-toggle .toggle-switch::after{
 /* Rodapé: devolvemos um fundo de cartão translúcido distinto */
 .page-footer{
   font-size:.95rem;
-  padding-top:1rem;
+  padding:1rem;
   color:var(--muted);
   background: var(--card-overlay);
   border-top: 1px solid rgba(0,0,0,0.04);
@@ -238,6 +239,13 @@ html[data-theme="blue"] .theme-toggle .toggle-switch::after{
   .bosses-preview{display:flex}
   .act-grid{grid-template-columns:repeat(3,1fr)}
 }
+
+/* Em telas pequenas, reduzimos a largura da logo */
+@media (max-width:600px){
+  #site-logo{max-width:220px}
+  .site-title{font-size:1.6rem}
+}
+
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important}
 }
