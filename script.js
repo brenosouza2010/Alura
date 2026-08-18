@@ -4,12 +4,12 @@
 
   // Configuração de chefes (adicione/edite aqui)
   const bosses = [
-    { id: 'spider', name: 'Aranha Sufocada', note: 'Fuja do salto' },
-    { id: 'coral', name: 'Coral Rainha', note: 'Priorize adds' },
-    { id: 'blade', name: 'Mestre das Lâminas', note: 'Conte spins' },
-    { id: 'flowers', name: 'Rainha das Flores', note: 'Evite áreas com espinhos' },
-    { id: 'tome', name: 'Guardião do Tomo', note: 'Quebre o escudo primeiro' },
-    { id: 'weblord', name: 'Senhor das Teias', note: 'Use dash lateral' }
+    { id: 'spider', name: 'Devoradora de Sinos', note: 'Fuja dos Sinos' },
+    { id: 'coral', name: 'Kharmelita', note: 'Priorize Cura aerea' },
+    { id: 'blade', name: 'LOst Lace', note: 'Use moscas mecânicas' },
+    { id: 'flowers', name: 'Nyleth', note: 'Evite áreas com espinhos' },
+    { id: 'tome', name: 'Seth', note: 'Evite fica no ar' },
+    { id: 'weblord', name: 'Coral Khan', note: 'Evite contato e desvie facilmente' }
   ];
 
   // Seletores
